@@ -1,12 +1,17 @@
 <script lang="ts">
-import Navbar from "./components/Navbar.svelte";
+	import Navbar from "./components/Navbar.svelte";
+	import { bootstrap } from "@stakeordie/griptape.js";
 
+	function connect() {
+		bootstrap();
+	}
   
 </script>
 
 <main>
 	<Navbar/>
   	<h1>Hello Typescript!</h1>
+	<button on:click={connect}> connect </button>
 
 </main>
 
