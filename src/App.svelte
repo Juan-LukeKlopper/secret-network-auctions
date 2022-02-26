@@ -1,74 +1,59 @@
 <script lang="ts">
-	import Navbar from "./components/Navbar.svelte";
   import { onMount } from "svelte";
-	import { bootstrap } from "@stakeordie/griptape.js";
+  import Navbar from "./components/Navbar.svelte";
+  import style from "./styling.svelte";
   import { auctionFactory } from "./contracts/auction-factory";
-
-	function connect() {
-		bootstrap();
-	}
+  import {
+	bootstrap,
+	getAddress,
+	onAccountAvailable,
+	getNativeCoinBalance,
+	coinConvert
+} from  '@stakeordie/griptape.js';
 
   let activeAuctions = [];
-  
+  let address,balance;
+  let connected = false;
+
   async function listActiveAuction() {
-    const {list_active_auctions: { active: results } } = await auctionFactory.listActiveAuctions();
+    const {
+      list_active_auctions: { active: results },
+    } = await auctionFactory.listActiveAuctions();
     activeAuctions = results;
   }
 
+  async function getBalance() {
+    let scrtbalance = await getNativeCoinBalance();
+    scrtbalance = coinConvert(scrtbalance, 6, "human");
+    balance = scrtbalance;
+  }
+
+  onAccountAvailable(() => {
+		address = getAddress();
+		getBalance();
+    connected = true;
+	})
+
   onMount(() => {
     listActiveAuction();
-  })
+  });
 </script>
 
 <main>
-	<Navbar/>
-  	<h1>Hello Typescript!</h1>
-	<button on:click={connect}> connect </button>
-  
+  <Navbar />
+  <h1>Hello Typescript!</h1>
+  <button on:click={bootstrap}> connect </button>
+
+  {#if connected}
+    <p>Your address is: {address}</p>
+    <p>Your balance is : {balance}</p>
+  {/if}
+
   <p>Active auctions</p>
   <ul>
     {#each activeAuctions as auction}
-    <li>{auction.label}</li>
-    <li>{auction.address}</li>
+      <li>{auction.label}</li>
+      <li>{auction.address}</li>
     {/each}
   </ul>
-
-</main> 
-
-<style>
-  :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  main {
-    text-align: center;
-    padding: 1em;
-    margin: 0 auto;
-  }
-
-  img {
-    height: 16rem;
-    width: 16rem;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4rem;
-    font-weight: 100;
-    line-height: 1.1;
-    margin: 2rem auto;
-    max-width: 14rem;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      max-width: none;
-    }
-
-    p {
-      max-width: none;
-    }
-  }
-</style>
+</main>
