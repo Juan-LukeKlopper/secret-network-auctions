@@ -12,13 +12,27 @@
     }
 </script>
 
-{#await getAddress() then address}
-    <p>Your address is: {address}</p>
-{/await}
+<div class="Account">
+    {#await getAddress()}
+        <p>Your address is: ...waiting</p> 
+    {:then address}
+        <p>Your address is: {address}</p>
+    {/await}
 
-{#await getBalance()}
-    <p>...waiting</p>
-{:then balance} 
-    <p>Your balance is : {balance} </p>
-{/await}
+    {#await getBalance()}
+        <p>Your balance is : ...waiting</p>
+    {:then balance} 
+        <p>Your balance is : {balance} </p>
+    {/await}
+</div>
+
+<style>
+    div {
+        outline: var(--text-color) solid 1px ;
+        text-align: justify;
+    }
+    p {
+        padding: auto;
+    }
+</style>
 
