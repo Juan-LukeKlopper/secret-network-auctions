@@ -1,5 +1,6 @@
 <script lang="ts">
     import tokens from "../data/tokens.json";
+    import { tokensWithViewkeys,tokensWithoutViewkeys,balances } from "../stores/stores"
     import {
         createContractClient,
         coinConvert,
@@ -9,10 +10,7 @@
         keplrViewingKeyManager,
         BaseContract,
     } from "@stakeordie/griptape.js";
-
-    let tokensWithViewkeys: any = [];
-    let tokensWithoutViewkeys:any = [];    
-    let balances: any = [];
+  
     let decimals = [];
     let index = 0;
     let viewkeys = false;
@@ -50,22 +48,22 @@
     }
 
     function getCoinBalance() {
-        const coinBalance = coinConvert( balances[index], decimals[index], "human");
+        let coinBalance = coinConvert( balances[index], decimals[index], "human", 2 );
         index = index + 1
         return coinBalance
     }
 
     async function getBalance() {
 
-        tokensWithViewkeys = []
-        tokensWithoutViewkeys = []
+        tokensWithViewkeys.length = 0;
+        tokensWithoutViewkeys.length = 0;
 
         const promise = tokens
             .filter(({ address }) => keplrViewingKeyManager.get(address))
             .map(({ address }) => {
                 const contract = refContract(address);
-                const add : Object = contract.getBalance() ;
-                tokensWithViewkeys = [...tokensWithViewkeys, contract.id];
+                const add = contract.getBalance() ;
+                tokensWithViewkeys.push(contract.id);
                 return add;
             });
 
@@ -74,7 +72,7 @@
             .map(({ address }) => {
                 const contract = refContract(address);
                 const add = contract.id;
-                tokensWithoutViewkeys = [...tokensWithoutViewkeys, contract.id];
+                tokensWithoutViewkeys.push(contract.id);
                 return add;
             });
 
@@ -82,9 +80,10 @@
         
 
         result.forEach((viewkey) => {
-            balances = [...balances, viewkey.value.balance.amount ]; 
+            balances.push(viewkey.value.balance.amount); 
         });
 
+        console.log(tokensWithViewkeys)
         await getdecimals();
     }
 
@@ -92,34 +91,46 @@
         const contractaddress: BaseContract = refContract(Token.address);
         await keplrViewingKeyManager.add(contractaddress);
         await getBalance();
-        console.log(decimals)
     }
 
-    onAccountAvailable(() => {
-        initContract();
-    });
+    initContract();
 </script>
 
 <div>
-    <p>wallet assets</p>
+    <h2> wallet assets </h2>
     {#if viewkeys == true}
         {#each tokens as token}
             {#if tokensWithViewkeys.includes(token.symbol) }
-                <span>{token.symbol} </span>
-                <span> balance : { getCoinBalance() } </span>
+                <span><strong> { getCoinBalance() } </strong>{token.symbol} </span>
                 <br > 
             {:else if tokensWithoutViewkeys.includes(token.symbol)}
                 <span>{token.symbol} </span>
-                <button on:click|once={() => { createViewingKey(token)}}>get more info</button>
+                <button on:click|once={() => { createViewingKey(token);}} > get more info </button>
                 <br>
             {/if}
         {/each}
     {:else}
         <span> Getting info from keplr</span>
         <br>
-        {/if}
+        <span class="refreshMessage"> Everytime you show wallet all the amount are refreshed to ensure accuracy, please be patient and enjoy your Secret Network Auction House experince!</span>
+    {/if}
 </div>
 
 <style>
+    span {
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
 
+    div {
+        text-align: start;
+        margin: 10px;
+        padding: 2px 0px 5px 15px;
+        outline: var(--text-color) solid 1px ;
+        border-radius: 2rem;
+    }
+
+    p {
+        margin-top: 1px;
+    }
 </style>
