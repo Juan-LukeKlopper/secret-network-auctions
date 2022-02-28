@@ -7,14 +7,14 @@ import type { AuctionFactory } from './types';
 const auctionFactoryDef = {
     queries:  {
         listActiveAuctions(): ContractQueryRequest {
-        return { list_active_auctions: {} };
+          return { list_active_auctions: {} };
       }
     }
 }
 
 export const auctionFactory = createContract<AuctionFactory>({
     id: "auction-Factory",
-    at: "secret182du2ls3wz30sta7yp03cpv8ppjfdl9rqmty74",
+    at: "secret1efgmrzljrrfghhlu9t3tcxhnhlyfsz08qzjkxm",
     definition: auctionFactoryDef
 });
 

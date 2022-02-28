@@ -67,6 +67,39 @@
       display: flex;
       flex-direction: column;
     }
+
+    strong{
+      color: var(--accent-color);
+    }
+    .auctions {
+      border-radius: 2rem;
+      text-align:start;
+      margin: 10px;
+      padding: 2px 0px 5px 15px;
+      outline: var(--text-color) solid 1px ;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      border-color: var(--text-color);
+      margin: 1px 5px 5px 1px;
+      border-radius: 2rem;
+    }
+
+    button:hover{
+      background-color: var(--accent-color);
+      color: var(--tertiary-color);
+    }
+
+    button:active{
+      background-color: var(--text-color);
+      color: var(--accent-color);
+      border-color: var(--primary-color);
+    }
+
+    .refreshMessage {
+      padding: 1px 2px 2px 1px;
+    }
   
     @media (min-width: 480px) {
       h1 {
