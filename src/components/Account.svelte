@@ -16,20 +16,22 @@
     {#await getAddress()}
         <p>Your address is: ...waiting</p> 
     {:then address}
-        <p>Your address is: {address}</p>
+        <p>Your address is: <strong>{address}</strong></p>
     {/await}
 
     {#await getBalance()}
         <p>Your balance is : ...waiting</p>
     {:then balance} 
-        <p>Your balance is : {balance} </p>
+        <p>Your balance is : <strong>{balance}</strong> </p>
     {/await}
 </div>
 
 <style>
     div {
+        margin: 10px;
+        padding: 2px 0px 5px 0px;
         outline: var(--text-color) solid 1px ;
-        text-align: justify;
+        border-radius: 2rem;
     }
     p {
         padding: auto;
