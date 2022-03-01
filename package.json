@@ -20,6 +20,7 @@
     "vite": "^2.8.0"
   },
   "dependencies": {
-    "@stakeordie/griptape.js": "^0.9.4"
+    "@stakeordie/griptape.js": "^0.9.4",
+    "uuid": "^8.3.2"
   }
 }
