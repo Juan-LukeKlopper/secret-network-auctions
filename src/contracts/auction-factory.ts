@@ -11,7 +11,6 @@ function getCodeHash(address) {
   return 'cd306596d0c5f43d99b7085c35be615dd2210c0a36bddfb4189b6a54d0906d95'
 }
 
-const { v4: UUidv4} = require('uuid');
 
 const auctionFactoryDef = {
     queries:  {
