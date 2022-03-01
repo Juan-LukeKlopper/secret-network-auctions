@@ -75,7 +75,7 @@
       border-radius: 2rem;
       text-align:start;
       margin: 10px;
-      padding: 2px 0px 5px 15px;
+      padding: 2px 15px 5px 15px;
       outline: var(--text-color) solid 1px ;
     }
 

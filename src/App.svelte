@@ -1,48 +1,26 @@
 <script lang="ts">
   import Navbar from "./components/Navbar.svelte";
   import style from "./styling.svelte";
-  import { auctionFactory } from "./contracts/auction-factory";
   import {
     bootstrap,
-    createContract,
-    getAddress,
-    onAccountAvailable,
-    getNativeCoinBalance,
-    coinConvert,
-    refContract,
+    onAccountAvailable
   } from "@stakeordie/griptape.js";
-  import { auctionDef } from "./contracts/auction";
   import Account from "./components/Account.svelte";
   import Wallet from "./components/Wallet.svelte";
   import Auctions from "./components/Auctions.svelte";
+  import CreateAuction from "./components/CreateAuction.svelte";
 
-  let activeAuctions = [];
-  let auctiondetails = "";
   let connected = false;
-  export let showWallet = false;
+  let showWallet = false;
+  let showCreate = false;
 
-  function initAuctions(activeAuctions) {
-    activeAuctions.forEach((item) =>
-      createContract({
-        id: item.address,
-        at: item.address,
-        definition: auctionDef,
-      })
-    );
+  function ToggleWallet() {
+    showCreate = false;
+    showWallet = !showWallet;
   }
 
-  async function listActiveAuction() {
-    const {
-      list_active_auctions: { active: results },
-    } = await auctionFactory.listActiveAuctions();
-    activeAuctions = results;
-    initAuctions(activeAuctions);
-  }
-
-  async function getAuctionInfo(address) {
-    const auctionContract = refContract(address);
-    const { auction_info: result } = await auctionContract.getAuctionInfo();
-    auctiondetails = result;
+  function ToggleCreate() {
+    showCreate = !showCreate;
     showWallet = false;
   }
 
@@ -60,13 +38,23 @@
     <button on:click={bootstrap}> connect </button>
   {:else}
     <Account />
-    {#if !showWallet}
-      <button on:click={() => (showWallet = !showWallet)}> show wallet </button>
+    {#if !showCreate}
+      <button on:click={() => ToggleCreate()}> create an auction</button>
     {:else}
-      <button on:click={() => (showWallet = !showWallet)}> hide wallet </button>
-      <Wallet/>
-      {auctiondetails = ""}
+      <button on:click={() => ToggleCreate()}> Show active auction</button>
     {/if}
-    <Auctions/>
+    
+    {#if !showWallet}
+      <button on:click={() => ToggleWallet()}> Show wallet </button>
+    {:else}
+      <button on:click={() => ToggleWallet()}> Hide wallet </button>
+      <Wallet/>
+    {/if}
+
+    {#if !showCreate}
+      <Auctions/>
+    {:else}
+      <CreateAuction/>
+    {/if}
   {/if}
 </main>

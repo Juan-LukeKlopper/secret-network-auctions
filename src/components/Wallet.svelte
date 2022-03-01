@@ -1,12 +1,11 @@
 <script lang="ts">
     import tokens from "../data/tokens.json";
-    import { tokensWithViewkeys,tokensWithoutViewkeys,balances } from "../stores/stores"
+    import { tokensWithViewkeys,tokensWVKaddress,balances } from "../stores/stores"
     import {
         createContractClient,
         coinConvert,
         refContract,
         snip20Def,
-        onAccountAvailable,
         keplrViewingKeyManager,
         BaseContract,
     } from "@stakeordie/griptape.js";
@@ -56,7 +55,7 @@
     async function getBalance() {
 
         tokensWithViewkeys.length = 0;
-        tokensWithoutViewkeys.length = 0;
+        tokensWVKaddress.length = 0;
 
         const promise = tokens
             .filter(({ address }) => keplrViewingKeyManager.get(address))
@@ -64,17 +63,10 @@
                 const contract = refContract(address);
                 const add = contract.getBalance() ;
                 tokensWithViewkeys.push(contract.id);
+                tokensWVKaddress.push(address);
                 return add;
             });
 
-        const promise2 = tokens
-            .filter(({ address }) => !keplrViewingKeyManager.get(address))
-            .map(({ address }) => {
-                const contract = refContract(address);
-                const add = contract.id;
-                tokensWithoutViewkeys.push(contract.id);
-                return add;
-            });
 
         const result = await Promise.allSettled(promise);
         
@@ -83,11 +75,10 @@
             balances.push(viewkey.value.balance.amount); 
         });
 
-        console.log(tokensWithViewkeys)
         await getdecimals();
     }
 
-    async function createViewingKey(Token) {
+    export async function createViewingKey(Token) {
         const contractaddress: BaseContract = refContract(Token.address);
         await keplrViewingKeyManager.add(contractaddress);
         await getBalance();
@@ -103,9 +94,9 @@
             {#if tokensWithViewkeys.includes(token.symbol) }
                 <span><strong> { getCoinBalance() } </strong>{token.symbol} </span>
                 <br > 
-            {:else if tokensWithoutViewkeys.includes(token.symbol)}
+            {:else}
                 <span>{token.symbol} </span>
-                <button on:click|once={() => { createViewingKey(token);}} > get more info </button>
+                <button on:click|once={() => { createViewingKey(token)}} > Create viewing key </button>
                 <br>
             {/if}
         {/each}
@@ -128,9 +119,5 @@
         padding: 2px 0px 5px 15px;
         outline: var(--text-color) solid 1px ;
         border-radius: 2rem;
-    }
-
-    p {
-        margin-top: 1px;
     }
 </style>
