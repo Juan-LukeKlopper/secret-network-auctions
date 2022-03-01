@@ -9,7 +9,7 @@ const provider = getKeplrAccountProvider();
 let app
 function runApp() {
 	app = new App({
-		target: document.getElementById('#svelte')
+		target: document.getElementById('app')
 	  })
 };
 
