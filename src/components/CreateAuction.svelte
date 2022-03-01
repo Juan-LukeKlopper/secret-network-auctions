@@ -75,7 +75,3 @@
 
     <button on:click={() => createAuction()}>Create Auction</button>
 </div>
-
-<style>
-    
-</style>

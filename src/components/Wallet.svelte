@@ -1,6 +1,6 @@
 <script lang="ts">
     import tokens from "../data/tokens.json";
-    import { tokensWithViewkeys,tokensWVKaddress,balances } from "../stores/stores"
+    import { tokensWithViewkeys,tokensWVKaddress,balances } from "../stores"
     import {
         createContractClient,
         coinConvert,

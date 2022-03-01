@@ -8,7 +8,7 @@
     coinConvert, 
 keplrViewingKeyManager,
 viewingKeyManager} from "@stakeordie/griptape.js";
-  import { balances, tokensWithViewkeys, tokensWVKaddress, bid_token_balance } from "../stores/stores";
+  import { balances, tokensWithViewkeys, tokensWVKaddress, bid_token_balance } from "../stores";
 
 
     let activeAuctions = [];

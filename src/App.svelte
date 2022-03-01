@@ -1,6 +1,6 @@
 <script lang="ts">
   import Navbar from "./components/Navbar.svelte";
-  import style from "./styling.svelte";
+  import style from "./components/styling.svelte";
   import {
     bootstrap,
     onAccountAvailable
